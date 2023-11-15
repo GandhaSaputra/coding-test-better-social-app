@@ -1,3 +1,7 @@
+# Answer for Question A
+
+Maaf saya tidak sempat untuk menjawab pertanyaan A karena waktu yang terbatas
+
 # Answer for Question C1
 
 Untuk menerapkan fitur "orang yang mungkin Anda kenal" berdasarkan koneksi pengguna dan komunitas yang mereka ikuti, Kita dapat mengikuti pendekatan berikut:
@@ -84,7 +88,7 @@ interface Community {
 
 Dengan menerapkan pendekatan ini, Kita dapat menghasilkan fitur yang efisien, dapat diterapkan dalam skala besar, dan memberikan nilai tambah kepada pengguna dengan cara yang relevan dan bermanfaat.
 
-# Answer for Question C1
+# Answer for Question C2
 
 Untuk menemukan saran terbaik bagi pengguna, kita dapat menggunakan algoritma berbasis peringkat yang mempertimbangkan koneksi pengguna dan komunitas yang mereka ikuti. Berikut adalah langkah-langkah untuk mencapai hal ini:
 
