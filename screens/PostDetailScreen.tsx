@@ -1,267 +1,188 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Button,
+  FlatList,
   Image,
   Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import IconBack from '../assets/back.png';
-import IconBlock from '../assets/block.png';
-import IconComment from '../assets/comment.png';
-import IconDownvoteActive from '../assets/downvote_active.png';
-import IconDownvoteInactive from '../assets/downvote_inactive.png';
-import IconShare from '../assets/share.png';
-import IconUpvoteActive from '../assets/upvote_active.png';
-import IconUpvoteInactive from '../assets/upvote_inactive.png';
+import {useFeed} from '../hooks/useFeed';
+import FeedCard from '../components/FeedCard';
 
 function PostDetailScreen() {
+  const {feeds, onChangeVote, onSendComment} = useFeed();
+  const [comment, setComment] = useState('');
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const feedDetail = feeds.find(e => e.id === route?.params?.id);
+
+  const keyExtractor = (e, i: number) => {
+    return `${i}`;
+  };
+
+  const renderSeparator = () => <View style={styles.divider} />;
+
   return (
-    <SafeAreaView>
-      <ScrollView style={{marginBottom: 48}}>
-        <View>
-          <View
-            style={{
-              height: 64,
-              alignItems: 'center',
-              flexDirection: 'row',
-            }}>
-            <Pressable onPress={() => navigation.goBack()}>
-              <Image
-                source={IconBack}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-            </Pressable>
+    <SafeAreaView style={styles.flex}>
+      <ScrollView style={styles.marginBottom48}>
+        <View style={styles.wrapperUser}>
+          <Pressable onPress={() => navigation.goBack()}>
             <Image
-              source={{
-                uri: 'https://picsum.photos/200',
-              }}
-              width={48}
-              height={48}
-              style={{borderRadius: 24, marginLeft: 24}}
+              source={IconBack}
+              height={18}
+              width={18}
+              style={styles.marginLeft22}
             />
-            <View style={{marginLeft: 16}}>
-              <Text
-                style={{fontWeight: '600', fontSize: 14, lineHeight: 16.94}}>
-                Usup Suparma
-              </Text>
-              <Text style={{fontWeight: '400', fontSize: 12, lineHeight: 18}}>
-                Mar 27, 2023
-              </Text>
-            </View>
+          </Pressable>
+          <Image
+            source={{
+              uri: 'https://picsum.photos/200',
+            }}
+            width={48}
+            height={48}
+            style={styles.userAvatar}
+          />
+          <View style={styles.marginLeft16}>
+            <Text style={styles.username}>{feedDetail?.user.name}</Text>
+            <Text style={styles.createdAt}>{feedDetail?.createdAt}</Text>
           </View>
-          <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-          <View>
-            <Text style={{margin: 24}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-              Integer et nunc ut tellus tinci, consectetur adipiscing elit.
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci
-              Nulla luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-              consectetur adipiscing elit. Nulla luctus in ipsum ac dictum.
-            </Text>
-            <Image
-              source={{
-                uri: 'https://picsum.photos/200',
-              }}
-              height={200}
-            />
-          </View>
-          <View
-            style={{
-              height: 52,
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                flex: 1,
-              }}>
-              <Image
-                source={IconShare}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-              <Image
-                source={IconComment}
-                height={18}
-                width={18}
-                style={{marginLeft: 24}}
-              />
-              <Text
-                style={{
-                  width: 24,
-                  marginHorizontal: 4,
-                  textAlign: 'center',
-                }}>
-                0
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}>
-              <Image
-                source={IconBlock}
-                height={18}
-                width={18}
-                style={{marginLeft: 22}}
-              />
-              <Pressable onPress={() => console.log('downvote')}>
+        </View>
+        <View style={styles.divider} />
+
+        <FeedCard
+          data={feedDetail}
+          onChangeVote={onChangeVote}
+          isDetail={true}
+        />
+
+        <FlatList
+          scrollEnabled={false}
+          data={feedDetail?.comments}
+          ItemSeparatorComponent={renderSeparator}
+          keyExtractor={keyExtractor}
+          renderItem={({item, index}) => {
+            return (
+              <View style={styles.containerComment}>
                 <Image
-                  source={IconDownvoteInactive}
-                  height={18}
-                  width={18}
-                  style={{marginLeft: 24}}
+                  source={{
+                    uri: item.userPhoto,
+                  }}
+                  width={36}
+                  height={36}
+                  style={styles.avatarComment}
                 />
-              </Pressable>
-              <Text
-                style={{
-                  width: 24,
-                  marginHorizontal: 11,
-                  textAlign: 'center',
-                }}>
-                0
-              </Text>
-              <Pressable onPress={() => console.log('upvote')}>
-                <Image
-                  source={IconUpvoteInactive}
-                  height={18}
-                  width={18}
-                  style={{marginRight: 22}}
-                />
-              </Pressable>
-            </View>
-          </View>
-        </View>
-        <View style={{height: 4, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <View
-          style={{
-            flexDirection: 'row',
-            minHeight: 72,
-            paddingVertical: 16,
-            paddingHorizontal: 24,
-          }}>
-          <Image
-            source={{
-              uri: 'https://picsum.photos/200',
-            }}
-            width={36}
-            height={36}
-            style={{borderRadius: 24, marginRight: 16}}
-          />
-          <View style={{width: '90%'}}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: 12,
-                lineHeight: 14.52,
-                color: '#828282',
-              }}>
-              Usup Suparma
-            </Text>
-            <Text style={{fontWeight: '400', fontSize: 16, lineHeight: 19.36}}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla
-              luctus in ipsum ac dictum. Integer et nunc ut tellus tinci,
-            </Text>
-          </View>
-        </View>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
+                <View style={{width: '90%'}}>
+                  <Text style={styles.userNameComment}>{item.userName}</Text>
+                  <Text style={styles.commentText}>{item.comment}</Text>
+                </View>
+              </View>
+            );
+          }}
+        />
       </ScrollView>
-      <View
-        style={{
-          position: 'absolute',
-          bottom: 20,
-          height: 60,
-          flexDirection: 'row',
-          alignItems: 'center',
-          width: '100%',
-          paddingHorizontal: 24,
-          zIndex: 10,
-        }}>
-        <View style={{height: 0.5, backgroundColor: '#C4C4C4'}} />
-        <TextInput placeholder="Enter Comment" style={{flex: 1}} />
-        <Button title="Comment" onPress={() => console.log('comment')} />
+      <View style={styles.containerReplyComment}>
+        <TextInput
+          value={comment}
+          placeholder="Enter Comment"
+          style={styles.flex}
+          onChangeText={setComment}
+        />
+        <Button
+          title="Comment"
+          onPress={() => {
+            onSendComment(comment, feedDetail?.id);
+            setComment('');
+          }}
+        />
       </View>
     </SafeAreaView>
   );
 }
 
 export default PostDetailScreen;
+
+const styles = StyleSheet.create({
+  //   container: {height: 547},
+  flex: {
+    flex: 1,
+  },
+  avatarComment: {borderRadius: 24, marginRight: 16},
+  containerComment: {
+    flexDirection: 'row',
+    minHeight: 72,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+  },
+  marginBottom48: {marginBottom: 48, flexGrow: 1},
+  wrapperUser: {
+    height: 64,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  userAvatar: {borderRadius: 24, marginLeft: 24},
+  marginLeft16: {marginLeft: 16},
+  username: {fontWeight: '600', fontSize: 14, lineHeight: 16.94},
+  createdAt: {fontWeight: '400', fontSize: 12, lineHeight: 18},
+  divider: {height: 0.5, backgroundColor: '#C4C4C4'},
+  margin24: {margin: 24},
+  containerRowAction: {
+    height: 52,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowFlex: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  commentsCount: {
+    width: 24,
+    marginHorizontal: 4,
+    textAlign: 'center',
+  },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  voteCount: {
+    width: 24,
+    marginHorizontal: 11,
+    textAlign: 'center',
+  },
+  marginLeft22: {marginLeft: 22},
+  marginLeft24: {marginLeft: 24},
+  marginRight22: {marginRight: 22},
+  cardDivider: {height: 4, backgroundColor: '#C4C4C4'},
+  userNameComment: {
+    fontWeight: '600',
+    fontSize: 12,
+    lineHeight: 14.52,
+    color: '#828282',
+  },
+  containerReplyComment: {
+    position: 'absolute',
+    bottom: 20,
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 24,
+    zIndex: 10,
+    borderTopColor: '#C4C4C4',
+    borderTopWidth: 1,
+  },
+  commentText: {
+    fontWeight: '400',
+    fontSize: 16,
+    lineHeight: 19.36,
+  },
+});

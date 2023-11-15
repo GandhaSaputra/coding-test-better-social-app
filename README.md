@@ -1,79 +1,137 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Answer for Question C1
 
-# Getting Started
+Untuk menerapkan fitur "orang yang mungkin Anda kenal" berdasarkan koneksi pengguna dan komunitas yang mereka ikuti, Kita dapat mengikuti pendekatan berikut:
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### 1. Struktur Data:
 
-## Step 1: Start the Metro Server
+#### Pengguna (User):
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+```typescript
+interface User {
+  id: string;
+  name: string;
+  connections: string[]; // Array of user IDs representing connections
+  communities: string[]; // Array of community IDs that the user follows
+}
 
-To start Metro, run the following command from the _root_ of your React Native project:
-
-```bash
-# using npm
-npm start
-
-# OR using Yarn
-yarn start
+interface Community {
+  id: string;
+  name: string;
+  members: string[]; // Array of user IDs who are members of the community
+}
 ```
 
-## Step 2: Start your Application
+### 2. Pendekatan Umum:
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+- **Identifikasi Koneksi dan Komunitas:**
 
-### For Android
+  - Saat pengguna masuk, identifikasi koneksi mereka dan komunitas yang mereka ikuti.
+  - Ini bisa menjadi bagian dari alur masuk atau dapat dijalankan secara berkala.
 
-```bash
-# using npm
-npm run android
+- **Peringkat Koneksi dan Komunitas:**
 
-# OR using Yarn
-yarn android
-```
+  - Berdasarkan aktivitas dan interaksi (misalnya, sering berkomunikasi atau berbagi di komunitas tertentu), berikan bobot kepada koneksi dan komunitas.
 
-### For iOS
+- **Sarankan Pengguna:**
+  - Gabungkan data koneksi dan komunitas untuk menemukan orang-orang yang mungkin dikenal oleh pengguna tersebut.
 
-```bash
-# using npm
-npm run ios
+### 3. Kasus Ekstrim:
 
-# OR using Yarn
-yarn ios
-```
+- **Tidak Ada Koneksi atau Komunitas Terkait:**
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+  - Jika seorang pengguna tidak memiliki koneksi atau tidak mengikuti komunitas apa pun, Anda dapat menyarankan pengguna berdasarkan pengguna-pengguna populer atau berdasarkan profil mereka.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+- **Terlalu Banyak Koneksi atau Komunitas Terkait:**
+  - Atur batasan pada jumlah saran yang akan ditampilkan agar tidak membanjiri pengguna dengan saran. Prioritaskan saran berdasarkan bobot atau relevansi.
 
-## Step 3: Modifying your App
+### 4. Pengujian:
 
-Now that you have successfully run the app, let's modify it.
+- **Unit Testing:**
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
+  - Pastikan fungsi-fungsi yang berurusan dengan pengidentifikasian koneksi, komunitas, dan peringkat berfungsi dengan benar.
 
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
+- **Integrasi Testing:**
 
-## Congratulations! :tada:
+  - Uji integrasi antara bagian-bagian sistem yang terlibat dalam penghasilan saran.
 
-You've successfully run and modified your React Native App. :partying_face:
+- **Uji Beban (Load Testing):**
 
-### Now what?
+  - Pastikan sistem dapat menangani beban pengguna yang besar tanpa mengalami penurunan kinerja.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
+- **Uji Pengguna (User Testing):**
 
-# Troubleshooting
+  - Lakukan uji pengguna untuk mendapatkan umpan balik langsung tentang keefektifan fitur ini.
 
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+- **A/B Testing:**
+  - Jalankan eksperimen A/B untuk mengukur seberapa baik fitur ini bekerja dibandingkan dengan alternatifnya.
 
-# Learn More
+### 5. Skalabilitas:
 
-To learn more about React Native, take a look at the following resources:
+- **Caching:**
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+  - Gunakan caching untuk hasil yang telah dihitung sebelumnya, mengurangi beban server.
+
+- **Distribusi Beban (Load Balancing):**
+
+  - Distribusikan beban dengan bijaksana agar setiap server dapat menangani permintaan dengan efisien.
+
+- **Optimasi Query:**
+
+  - Optimalisasi query database untuk memastikan eksekusi yang cepat dan efisien.
+
+- **Monitoring dan Logging:**
+  - Implementasikan sistem pemantauan dan logging untuk mengidentifikasi masalah sejak dini dan memahami pola penggunaan.
+
+Dengan menerapkan pendekatan ini, Kita dapat menghasilkan fitur yang efisien, dapat diterapkan dalam skala besar, dan memberikan nilai tambah kepada pengguna dengan cara yang relevan dan bermanfaat.
+
+# Answer for Question C1
+
+Untuk menemukan saran terbaik bagi pengguna, kita dapat menggunakan algoritma berbasis peringkat yang mempertimbangkan koneksi pengguna dan komunitas yang mereka ikuti. Berikut adalah langkah-langkah untuk mencapai hal ini:
+
+### Algoritma Rekomendasi Pengguna:
+
+1. **Identifikasi Koneksi dan Komunitas:**
+
+   - Ambil data koneksi dan komunitas pengguna. Identifikasi pengguna-pengguna yang terhubung dan komunitas yang diikuti.
+
+2. **Hitung Bobot untuk Koneksi:**
+
+   - Berikan bobot kepada setiap koneksi berdasarkan aktivitas dan interaksi sebelumnya. Misalnya, seringnya berkomunikasi, berbagi konten bersama, atau berpartisipasi dalam kegiatan bersama.
+
+3. **Hitung Bobot untuk Komunitas:**
+
+   - Berikan bobot kepada setiap komunitas yang diikuti pengguna berdasarkan aktivitas di dalamnya. Aktivitas ini dapat mencakup frekuensi partisipasi, berbagi konten, dan lainnya.
+
+4. **Gabungkan Bobot Koneksi dan Komunitas:**
+
+   - Gabungkan bobot koneksi dan bobot komunitas untuk setiap pengguna yang terhubung atau mengikuti komunitas tertentu. Ini memberikan peringkat total untuk setiap pengguna yang mungkin dikenal.
+
+5. **Filter Pengguna yang Sudah Dikenal:**
+
+   - Hilangkan pengguna yang sudah dikenal oleh pengguna saat ini untuk mencegah merekomendasikan orang yang sudah dekat.
+
+6. **Urutkan dan Pilih Saran Terbaik:**
+
+   - Urutkan pengguna berdasarkan peringkat total dan pilih beberapa pengguna teratas sebagai saran.
+
+7. **Presentasikan Saran kepada Pengguna:**
+   - Tampilkan saran kepada pengguna dengan mempertimbangkan presentasi yang baik, seperti gambar profil, nama, dan aktivitas terkait.
+
+### Algoritma ini memiliki beberapa keunggulan:
+
+- **Relevansi:**
+
+  - Dengan memberikan bobot kepada koneksi dan komunitas, algoritma ini mempertimbangkan kedekatan pengguna dengan orang-orang dan komunitas tertentu.
+
+- **Personalisasi:**
+
+  - Setiap rekomendasi dapat disesuaikan dengan aktivitas dan koneksi pengguna, memberikan pengalaman yang lebih personal.
+
+- **Skalabilitas:**
+
+  - Dengan mempertimbangkan bobot, algoritma ini dapat diukur untuk menangani jumlah pengguna dan komunitas yang besar.
+
+- **Fleksibilitas:**
+  - Algoritma ini dapat disesuaikan dengan menyesuaikan bobot atau faktor-faktor lainnya sesuai dengan kebutuhan dan pemahaman lebih lanjut tentang interaksi pengguna.
+
+Implementasi algoritma ini dapat membantu menciptakan pengalaman pengguna yang lebih baik dan memberikan rekomendasi yang lebih relevan dan bermakna berdasarkan koneksi sosial dan partisipasi dalam komunitas.
